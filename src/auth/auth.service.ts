@@ -8,11 +8,13 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import * as argon from 'argon2';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '@prisma/client';
+import { ConfigService } from '@nestjs/config';
 @Injectable()
 export class AuthService {
   constructor(
     private prismaService: PrismaService,
     private jwtService: JwtService,
+    private configService: ConfigService,
   ) {}
   async register(authDTO: AuthDTO) {
     const { email, password, fullName } = authDTO;
@@ -69,7 +71,7 @@ export class AuthService {
       email: user.email,
     };
     return this.jwtService.signAsync(payload, {
-      secret: 'secret',
+      secret: this.configService.get('JWT_SECRET_KEY'),
       expiresIn: '30m',
     });
   }

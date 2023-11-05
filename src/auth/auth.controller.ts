@@ -1,7 +1,8 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthDTO, AuthLoginDTO } from './dto';
 import { AuthService } from './auth.service';
-
+import { AuthGuard } from '@nestjs/passport';
+import { Request } from 'express';
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
@@ -22,8 +23,11 @@ export class AuthController {
     return this.authService.login(authLoginDTO);
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Post('logout')
-  logout() {
-    return 'logout';
+  logout(@Req() req: Request) {
+    return {
+      message: 'logout',
+    };
   }
 }

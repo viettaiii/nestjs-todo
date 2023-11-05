@@ -1,0 +1,49 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// user - todo
+
+model User {
+  id        Int    @id @default(autoincrement())
+  email     String
+  hashedPWD String
+  fullName  String
+
+  // relationship
+  todos Todo[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+}
+
+// todo
+
+// 1user - *todo
+
+model Todo {
+  id        Int     @id @default(autoincrement())
+  title     String
+  completed Boolean
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  // relationship
+  User      User?    @relation(fields: [userId], references: [id])
+  userId    Int?
+}
+
+// create database , connect server , docker
+
+// option + shift + F
+
+// ctrl + F , Ctrl + S

@@ -19,11 +19,8 @@ export class AuthService {
   async register(authDTO: AuthDTO) {
     const { email, password, fullName } = authDTO;
 
-    const isEmail = await this.prismaService.user.findFirst({
-      where: { email },
-    });
-    if (isEmail) throw new ForbiddenException('Email is existing');
-
+    const isEmail = await this.findByEmail(email);
+    if (isEmail) throw new ForbiddenException('Email is already in use');
     // hash password
     const hashedPWD = await this.createHashPassword(password);
 
@@ -31,7 +28,7 @@ export class AuthService {
     const user = await this.prismaService.user.create({
       data: { hashedPWD, email, fullName },
     });
-
+    delete user.hashedPWD;
     return user;
     // const user = aw
     // Client request 1  -> Controller -> Service
@@ -39,15 +36,10 @@ export class AuthService {
 
   async login(authLoginDTO: AuthLoginDTO) {
     const { email, password } = authLoginDTO;
-    const user = await this.prismaService.user.findFirst({
-      where: { email },
-    });
-    if (!user) throw new NotFoundException('Email/password incorrect');
-
+    const user = await this.findByEmail(email);
+    if (!user) throw new ForbiddenException('Email is incorrect');
     // compare password
-    const isChecked = await this.comparePassword(user.hashedPWD, password);
-
-    if (!isChecked) throw new ForbiddenException('Credentials invalid');
+    await this.comparePassword(user.hashedPWD, password);
 
     // create access token
     const accessToken = await this.createAccessToken(user);
@@ -57,12 +49,22 @@ export class AuthService {
     };
   }
 
+  async findByEmail(email: string): Promise<User> {
+    const user = await this.prismaService.user.findFirst({
+      where: { email },
+    });
+
+    return user;
+  }
+
   createHashPassword(password: string): Promise<string> {
     return argon.hash(password);
   }
 
-  comparePassword(hashedPWD: string, password: string): Promise<boolean> {
-    return argon.verify(hashedPWD, password);
+  async comparePassword(hashedPWD: string, password: string): Promise<void> {
+    const isChecked = await argon.verify(hashedPWD, password);
+    if (!isChecked) throw new ForbiddenException('Credentials invalid');
+    return;
   }
 
   createAccessToken(user: User): Promise<string> {

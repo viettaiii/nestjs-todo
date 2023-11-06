@@ -10,11 +10,23 @@ services:
       - POSTGRES_DB=dev-db
     ports:
       - 5433:5432 ## {port localhost (MyPC)}: {port container }
+  test-dev-db:
+    image: postgres:15.0
+    container_name: test-dev-db
+    environment:
+      - POSTGRES_PASSWORD=123456
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=test-dev-db
+    ports:
+      - 5434:5432 ## {port localhost (MyPC)}: {port container }
 
 
 
 
 ## -d : detach background/mode
 ## docker compose up -d
+
+
+## docker compose up -d dev-db -d
 
   

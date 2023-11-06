@@ -12,7 +12,7 @@ import {
 import { TodoService } from './todo.service';
 import { InsertTodoDTO } from './dto';
 
-import { GetUser } from 'src/auth/decorator';
+import { GetUser } from '../auth/decorator';
 import { UpdateTodoDTO } from './dto/updateTodo.dto';
 import { MyAuthGuard } from '../auth/gruad';
 @Controller('todos')

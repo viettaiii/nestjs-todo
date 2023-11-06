@@ -13,6 +13,10 @@ export class PrismaService extends PrismaClient {
       },
     });
   }
+
+  async cleanDatabase() {
+    await this.$transaction([this.user.deleteMany(), this.todo.deleteMany()]);
+  }
 }
 
 // config service :

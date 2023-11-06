@@ -10,13 +10,10 @@
     "db:dev:remove": "docker compose rm dev-db --stop --force --volumes",
     "db:dev:create": "docker compose up dev-db --detach",
     "db:dev:restart": "npm run db:dev:remove && npm run db:dev:create && sleep 2 && npm run prisma:dev:deploy",
-
     "prisma:test:deploy": "npx dotenv -e .env.test -- prisma migrate deploy",
     "db:test:remove": "docker compose rm test-dev-db --stop --force --volumes",
     "db:test:create": "docker compose up test-dev-db --detach",
     "db:test:restart": "npm run db:test:remove && npm run db:test:create && sleep 2 && npm run prisma:test:deploy",
-
-
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
@@ -38,6 +35,7 @@
     "@nestjs/jwt": "^10.1.1",
     "@nestjs/passport": "^10.0.2",
     "@nestjs/platform-express": "^10.0.0",
+    "@nestjs/swagger": "^7.1.14",
     "@prisma/client": "^5.5.2",
     "argon2": "^0.31.2",
     "class-transformer": "^0.5.1",

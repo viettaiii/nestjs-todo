@@ -88,7 +88,7 @@ describe('Test App (e2e)', () => {
             email: 'email@gmail.com',
             password: '123123',
           })
-          .expectStatus(201)
+          .expectStatus(200)
           .stores('accessToken', 'accessToken')
           .inspect();
       });
@@ -125,7 +125,7 @@ describe('Test App (e2e)', () => {
           .withHeaders({
             Authorization: 'Bearer $S{accessToken}',
           })
-          .expectStatus(201)
+          .expectStatus(200)
           .inspect();
       });
       it('Should logout failed', () => {

@@ -23,7 +23,11 @@ export class TodoService {
   }
 
   async getTodoById(todoId: number) {
-    return await this.prismaService.todo.findFirst({ where: { id: todoId } });
+    const todo = await this.prismaService.todo.findFirst({
+      where: { id: todoId },
+    });
+    if (!todo) throw new NotFoundException('Todo not found');
+    return todo;
   }
 
   async patchTodoById(
